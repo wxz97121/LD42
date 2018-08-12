@@ -15,6 +15,5 @@ public abstract class NPC : MonoBehaviour
     public void ExitFromTrain()
     {
         isDowning = true;
-        //TODO;
     }
 }
