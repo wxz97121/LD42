@@ -16,4 +16,7 @@ public abstract class NPC : MonoBehaviour
     {
         isDowning = true;
     }
+    public virtual void BeatBehavior (){
+        
+    }
 }

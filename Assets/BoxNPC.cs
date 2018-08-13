@@ -24,4 +24,8 @@ public class BoxNPC : NPC {
             else m_Rigid.AddForce(Random.Range(minForce, maxForce) * Vector2.Lerp(DowningminVec, DowningmaxVec, Random.value));
         }
     }
+    public override void BeatBehavior()
+    {
+        gameObject.transform.eulerAngles += new Vector3(0, 180f, 0);
+    }
 }

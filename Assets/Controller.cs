@@ -13,6 +13,7 @@ public class Controller : MonoBehaviour
     public static float minX = -97, maxX = 82;
     public Text UIText;
     public TransformForce m_Character;
+    [SerializeField] private float bpm;
     [System.Serializable]
     public struct StationInfo
     {
@@ -31,6 +32,7 @@ public class Controller : MonoBehaviour
     {
         Random.InitState(System.DateTime.Now.Second);
         StartCoroutine(StationTimer());
+        StartCoroutine(Beat());
     }
     void ExitTrain(StationInfo st)
     {
@@ -50,7 +52,7 @@ public class Controller : MonoBehaviour
             for (int i = 0; i < 15; i++)
             {
                 int Dir = Random.value > 0.5 ? 1 : -1;
-                nowNPC.Add(Instantiate(CatNPCPrefab,
+                nowNPC.Add(Instantiate(BoxNPCPrefab,
                     new Vector3(Random.Range(-70, 70), Random.Range(20, 30), 0), Quaternion.identity).GetComponent<NPC>());
                 yield return new WaitForSeconds(Random.Range(0.25f, 0.5f));
             }
@@ -124,6 +126,7 @@ public class Controller : MonoBehaviour
         yield break;
         //当主角被挤下去的时候调用这玩意
     }
+
     IEnumerator Win()
     {
         UIText.text = "You Win";
@@ -138,5 +141,14 @@ public class Controller : MonoBehaviour
     {
         //if (tmpGUI)
         //    GUI.Label(new Rect(50, 10, 1000, 800), tmpString);
+    }
+
+    IEnumerator Beat (){
+        while (true){
+            foreach(NPC npcinst in nowNPC){
+                npcinst.BeatBehavior();
+            }
+            yield return new WaitForSeconds(60f / bpm);
+        }
     }
 }
