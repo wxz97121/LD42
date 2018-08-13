@@ -7,6 +7,7 @@ public class Controller : MonoBehaviour
 {
     public GameObject BoxNPCPrefab;
     public GameObject CatNPCPrefab;
+    public GameObject[] NPCPrefabs;
     public StationInfo[] Station;
     public List<NPC> nowNPC;
     public GameObject LDoor, RDoor;
