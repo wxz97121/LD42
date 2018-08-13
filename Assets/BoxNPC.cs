@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoxNPC : NPC {
+public class BoxNPC : NPC
+{
 
     public float minWaitTime = 1, maxWaitTime = 2.5f;
     public Vector2 minVec, maxVec;
@@ -28,4 +29,5 @@ public class BoxNPC : NPC {
     {
         gameObject.transform.eulerAngles += new Vector3(0, 180f, 0);
     }
+
 }

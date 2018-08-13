@@ -10,13 +10,23 @@ public class CatNPC : NPC
     public Vector2 DowningminVec, DowningmaxVec;
     public float minForce, maxForce;
     private JellySprite m_JS;
+    public int Dir;
+    [HideInInspector]
+    public TransformForce m_Character;
     private new void Awake()
     {
         base.Awake();
         m_JS = gameObject.GetComponent<JellySprite>();
     }
+    private void Start()
+    {
+        GetComponent<JellySprite>().AddForce(new Vector2(Dir, 1) * 1000 * Random.Range(2, 5));
+        DowningmaxVec *= new Vector2(Dir, 1);
+        DowningminVec *= new Vector2(Dir, 1);
+    }
     protected override IEnumerator Move()
     {
+        yield break;
         while (true)
         {
             //print(isDowning);
@@ -24,5 +34,18 @@ public class CatNPC : NPC
             if (!isDowning) m_JS.AddForce(Random.Range(minForce, maxForce) * Vector2.Lerp(minVec, maxVec, Random.value));
             else m_JS.AddForce(Random.Range(minForce, maxForce) * Vector2.Lerp(DowningminVec, DowningmaxVec, Random.value));
         }
+    }
+    public override void BeatBehavior()
+    {
+        //base.BeatBehavior();
+        if (!m_JS) return;
+        //gameObject.transform.eulerAngles += new Vector3(0, 180f, 0);
+        if (!isDowning) m_JS.AddForce(Random.Range(minForce, maxForce) * Vector2.Lerp(minVec, maxVec, Random.value));
+        else m_JS.AddForce(Random.Range(minForce, maxForce) * Vector2.Lerp(DowningminVec, DowningmaxVec, Random.value));
+    }
+    void OnJellyCollisionStay2D(JellySprite.JellyCollision2D collision)
+    {
+        if (collision.Collision2D.gameObject.CompareTag("Player"))
+            if (m_Character) m_Character.isHurt++;
     }
 }

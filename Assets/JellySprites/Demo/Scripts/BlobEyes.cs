@@ -45,7 +45,7 @@ public class BlobEyes : MonoBehaviour
 
 			if(m_Blinking)
 			{
-				GameObject[] blobs = GameObject.FindGameObjectsWithTag("Blob");
+				GameObject[] blobs = GameObject.FindGameObjectsWithTag("NPC");
 				int randomBlobIndex = UnityEngine.Random.Range(0, blobs.Length);
 
 				if(blobs[randomBlobIndex] != this.gameObject)
