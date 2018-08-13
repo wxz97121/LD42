@@ -108,7 +108,7 @@ public class Controller : MonoBehaviour
             if (i + 1 == Station.Length)
             {
                 UIText.text = "该下车啦！！快想办法下车！！";
-                UIText.rectTransform.DOShakePosition(st.StationTime);
+                UIText.rectTransform.DOShakePosition(st.StationTime,10,20,90,false,false);
             }
             LDoor.transform.DOMoveY(100, 1f);
             RDoor.transform.DOMoveY(100, 1f);
@@ -132,8 +132,11 @@ public class Controller : MonoBehaviour
             Camera.main.DOShakePosition(1, 1.5f, 5);
             DOTween.To(x => m_TrainMove.MoveSpeed = x, 0, 150, 1);
             //每到一站回一些血
-            m_Character.HP += 0.2f * m_Character.InitalHP;
-            m_Character.HP = Mathf.Clamp(m_Character.HP, 0, m_Character.InitalHP);
+            if (m_Character.GetComponent<Rigidbody2D>().bodyType != RigidbodyType2D.Kinematic)
+            {
+                m_Character.HP += 0.25f * m_Character.InitalHP;
+                m_Character.HP = Mathf.Clamp(m_Character.HP, 0, m_Character.InitalHP);
+            }
             UIText.text = "地铁正在前行";
             Running.Play();
             CleanNPC();
