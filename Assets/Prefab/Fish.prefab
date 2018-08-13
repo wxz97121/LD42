@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 50607211193122708}
   - component: {fileID: 61526324988535618}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Fish
   m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
