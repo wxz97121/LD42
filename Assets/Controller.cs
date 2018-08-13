@@ -14,10 +14,12 @@ public class Controller : MonoBehaviour
     public GameObject LDoor, RDoor;
     public static float minX, maxX;
     public Text UIText;
+    public GameObject notiObj;
     public TransformForce m_Character;
     private TrainMove m_TrainMove;
     public Image EndCG;
     public Sprite End2, End3;
+    public int stationIndex = -1;
     [SerializeField] private float bpm;
     private AudioSource Running;
     private AudioSource DoorAudio;
@@ -39,6 +41,7 @@ public class Controller : MonoBehaviour
         m_TrainMove = FindObjectOfType<TrainMove>();
         Running = transform.Find("Running").GetComponent<AudioSource>();
         DoorAudio = transform.Find("DoorAudio").GetComponent<AudioSource>();
+        stationIndex = -1;
         //nowNPC = new List<NPC>();
     }
     void Start()
@@ -47,6 +50,17 @@ public class Controller : MonoBehaviour
         StartCoroutine(StationTimer());
         StartCoroutine(Beat());
     }
+    private void Update()
+    {
+        //死亡判定
+        if (m_Character.transform.position.x < minX || m_Character.transform.position.x > maxX || m_Character.transform.position.y < -70)
+        {
+            StopCoroutine(StationTimer());
+            if (stationIndex + 1 != Station.Length) StartCoroutine(Lose("GAME OVER : OUT OF TRAIN"));
+            else StartCoroutine(Win());
+        }
+    }
+
     void ExitTrain(StationInfo st)
     {
         //随机找一堆东西下车。
@@ -97,17 +111,18 @@ public class Controller : MonoBehaviour
     {
         for (int i = 0; i < Station.Length; i++)
         {
+            stationIndex = i;
             var st = Station[i];
             yield return new WaitForSeconds(st.TimeToThisStation);
             //TODO：放地铁停止的动画和音效
             DOTween.To(x => m_TrainMove.MoveSpeed = x, 150, 0, 1);
             Camera.main.DOShakePosition(1, 1.5f, 5);
-            UIText.text = "地铁到站";
+            UIText.text = "ARRIVING AT NEXT STATION !";
             Running.Pause();
             //如果是最后一站
             if (i + 1 == Station.Length)
             {
-                UIText.text = "该下车啦！！快想办法下车！！";
+                UIText.text = "TIME TO GET OFF !";
                 UIText.rectTransform.DOShakePosition(st.StationTime,10,20,90,false,false);
             }
             LDoor.transform.DOMoveY(100, 1f);
@@ -120,13 +135,7 @@ public class Controller : MonoBehaviour
             RDoor.transform.DOMoveY(4, 1f);
             DoorAudio.Play();
             yield return new WaitForSeconds(1);
-            //死亡判定
-            if (m_Character.transform.position.x < minX || m_Character.transform.position.x > maxX || m_Character.transform.position.y < -70)
-            {
-                if (i + 1 != Station.Length) StartCoroutine(Lose("游戏失败，你中途被挤下了车"));
-                else StartCoroutine(Win());
-                yield break;
-            }
+
 
             //TODO：播放地铁开始运动的动画和音效
             Camera.main.DOShakePosition(1, 1.5f, 5);
@@ -137,16 +146,17 @@ public class Controller : MonoBehaviour
                 m_Character.HP += 0.25f * m_Character.InitalHP;
                 m_Character.HP = Mathf.Clamp(m_Character.HP, 0, m_Character.InitalHP);
             }
-            UIText.text = "地铁正在前行";
+            UIText.text = "NEXT STOP";
             Running.Play();
             CleanNPC();
 
         }
-        StartCoroutine(Lose("游戏失败，你坐过了站"));
+        StartCoroutine(Lose("GAME OVER : MISS YOUR STOP"));
     }
     public IEnumerator Lose(string s)
     {
         UIText.text = s;
+        notiObj.active = false;
         Time.timeScale = 0.1f;
         EndCG.color = Color.black;
         EndCG.DOFade(1, 0.1f);
@@ -184,7 +194,7 @@ public class Controller : MonoBehaviour
         Application.Quit();
 
     }
-    string tmpString = "地铁正在前行";
+    string tmpString = "NEXT STOP";
     bool tmpGUI = true;
     private void OnGUI()
     {

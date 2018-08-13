@@ -17,6 +17,8 @@ public class TransformForce : MonoBehaviour
     public float JumpForce = 1000;
     public float HP = 10;
     public Scrollbar HPBar;
+    public Image ouch;
+    public AudioSource punch;
     [HideInInspector]
     public float InitalHP;
     private void Awake()
@@ -91,8 +93,10 @@ public class TransformForce : MonoBehaviour
                 HP = InitalHP;
             }
         }
-        if (HP < 0) StartCoroutine(m_Controller.Lose("呜呜呜，游戏失败，你被挤死了"));
+        if (HP < 0) StartCoroutine(m_Controller.Lose("GAME OVER : OVERCROWDED"));
         HPBar.size = Mathf.Clamp01(HP / InitalHP);
+
+        HPBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + new Vector3(0, 14f, 0));
     }
     public int isHurt = 0;
     private void FixedUpdate()
@@ -100,6 +104,7 @@ public class TransformForce : MonoBehaviour
         if (isHurt >= 2)
         {
             HP -= Time.fixedDeltaTime * 0.5f * (isHurt - 1);
+            punch.Play();
         }
         isHurt = 0;
     }

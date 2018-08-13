@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Blob
   - NPC
+  - BGM
   layers:
   - Default
   - TransparentFX

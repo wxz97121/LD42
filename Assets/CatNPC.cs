@@ -11,6 +11,7 @@ public class CatNPC : NPC
     public float minForce, maxForce;
     private JellySprite m_JS;
     public int Dir;
+    public AudioSource punch;
     [HideInInspector]
     public TransformForce m_Character;
     private new void Awake()
@@ -45,7 +46,13 @@ public class CatNPC : NPC
     }
     void OnJellyCollisionStay2D(JellySprite.JellyCollision2D collision)
     {
-        if (collision.Collision2D.gameObject.CompareTag("Player"))
-            if (m_Character) m_Character.isHurt++;
+        if (collision.Collision2D.gameObject.CompareTag("Player")){
+            if (m_Character)
+            {
+                m_Character.isHurt++;
+
+            }
+        }
+
     }
 }
