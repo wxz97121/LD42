@@ -19,6 +19,8 @@ public class Controller : MonoBehaviour
     public Image EndCG;
     public Sprite End2, End3;
     [SerializeField] private float bpm;
+    private AudioSource Running;
+    private AudioSource DoorAudio;
     [System.Serializable]
     public struct StationInfo
     {
@@ -35,6 +37,8 @@ public class Controller : MonoBehaviour
         maxX = RDoor.transform.position.x;
         m_Character = FindObjectOfType<TransformForce>();
         m_TrainMove = FindObjectOfType<TrainMove>();
+        Running = transform.Find("Running").GetComponent<AudioSource>();
+        DoorAudio = transform.Find("DoorAudio").GetComponent<AudioSource>();
         //nowNPC = new List<NPC>();
     }
     void Start()
@@ -99,19 +103,23 @@ public class Controller : MonoBehaviour
             DOTween.To(x => m_TrainMove.MoveSpeed = x, 150, 0, 1);
             Camera.main.DOShakePosition(1, 1.5f, 5);
             UIText.text = "地铁到站";
+            Running.Pause();
             //如果是最后一站
             if (i + 1 == Station.Length)
             {
                 UIText.text = "该下车啦！！快想办法下车！！";
                 UIText.rectTransform.DOShakePosition(st.StationTime);
             }
-            LDoor.transform.DOMoveY(100, 0.5f);
-            RDoor.transform.DOMoveY(100, 0.5f);
+            LDoor.transform.DOMoveY(100, 1f);
+            RDoor.transform.DOMoveY(100, 1f);
+            DoorAudio.Play();
             ExitTrain(st);
             StartCoroutine(SpawnNPC(st));
             yield return new WaitForSeconds(st.StationTime);
-            LDoor.transform.DOMoveY(4, 0.5f);
-            RDoor.transform.DOMoveY(4, 0.5f);
+            LDoor.transform.DOMoveY(4, 1f);
+            RDoor.transform.DOMoveY(4, 1f);
+            DoorAudio.Play();
+            yield return new WaitForSeconds(1);
             //死亡判定
             if (m_Character.transform.position.x < minX || m_Character.transform.position.x > maxX || m_Character.transform.position.y < -70)
             {
@@ -119,6 +127,7 @@ public class Controller : MonoBehaviour
                 else StartCoroutine(Win());
                 yield break;
             }
+
             //TODO：播放地铁开始运动的动画和音效
             Camera.main.DOShakePosition(1, 1.5f, 5);
             DOTween.To(x => m_TrainMove.MoveSpeed = x, 0, 150, 1);
@@ -126,6 +135,7 @@ public class Controller : MonoBehaviour
             m_Character.HP += 0.2f * m_Character.InitalHP;
             m_Character.HP = Mathf.Clamp(m_Character.HP, 0, m_Character.InitalHP);
             UIText.text = "地铁正在前行";
+            Running.Play();
             CleanNPC();
 
         }
