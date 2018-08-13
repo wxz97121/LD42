@@ -2814,7 +2814,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -4424,7 +4424,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Strenth: 225
   JumpForce: 2500
-  HP: 7.85
+  HP: 8.25
   HPBar: {fileID: 690971610}
   ouch: {fileID: 0}
   punch: {fileID: 1561846842}

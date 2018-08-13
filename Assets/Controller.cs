@@ -52,13 +52,7 @@ public class Controller : MonoBehaviour
     }
     private void Update()
     {
-        //死亡判定
-        if (m_Character.transform.position.x < minX || m_Character.transform.position.x > maxX || m_Character.transform.position.y < -70)
-        {
-            StopCoroutine(StationTimer());
-            if (stationIndex + 1 != Station.Length) StartCoroutine(Lose("GAME OVER : OUT OF TRAIN"));
-            else StartCoroutine(Win());
-        }
+
     }
 
     void ExitTrain(StationInfo st)
@@ -135,7 +129,14 @@ public class Controller : MonoBehaviour
             RDoor.transform.DOMoveY(4, 1f);
             DoorAudio.Play();
             yield return new WaitForSeconds(1);
-
+            //死亡判定
+            if (m_Character.transform.position.x < minX || m_Character.transform.position.x > maxX || m_Character.transform.position.y < -70)
+            {
+                //StopCoroutine(StationTimer());
+                if (stationIndex + 1 != Station.Length) StartCoroutine(Lose("GAME OVER : OUT OF TRAIN"));
+                else StartCoroutine(Win());
+                yield break;
+            }
 
             //TODO：播放地铁开始运动的动画和音效
             Camera.main.DOShakePosition(1, 1.5f, 5);
@@ -168,8 +169,9 @@ public class Controller : MonoBehaviour
 
     IEnumerator Win()
     {
-        GetComponent<AudioSource>().DOFade(0, 0.75f);
+        //GetComponent<AudioSource>().DOFade(0, 0.75f);
         UIText.DOFade(0, 0.75f);
+        notiObj.SetActive(false);
         m_Character.enabled = false;
         EndCG.DOFade(1, 0.75f);
         yield return new WaitForSeconds(2);
